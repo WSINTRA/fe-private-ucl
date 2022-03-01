@@ -1,5 +1,5 @@
 import { Preview } from "@mui/icons-material";
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import * as React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
@@ -34,6 +34,11 @@ function Homey() {
         <TextField onChange={(e)=>setLoginForm(prev => {return {...prev, username: e.target.value }} )} placeholder={'username'} />
         <TextField type="password"
           autoComplete="current-password" onChange={(e)=>setLoginForm(prev => {return {...prev, password: e.target.value }} )} placeholder={'password'} />
+      </Box>
+      <Box>
+        <Button>
+          Login
+        </Button>
       </Box>
     </>
   );
