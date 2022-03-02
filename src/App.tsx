@@ -1,5 +1,5 @@
-import { Preview } from "@mui/icons-material";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import moment from "moment";
 import * as React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
@@ -61,13 +61,17 @@ const Homey=(props: {setAuth:React.Dispatch<React.SetStateAction<boolean>> })=> 
 function Home() {
   return (
     <>
-      <main>
-        <h2>Welcome to the homepage!</h2>
-        <p>You can do this, I believe in you.</p>
-      </main>
-      <nav>
-        <Link to="/about">About</Link>
+     <nav>
+        <IconButton>Customers</IconButton>
+        <IconButton>Employees</IconButton>
       </nav>
+      <main>
+        {moment().format('MMMM Do YYYY, h:mm:ss a')}
+        <h2>Customers total: 1</h2>
+        <p>You can do this, I believe in you.</p>
+        <h2>Active Employee count: 2</h2>
+      </main>
+     
     </>
   );
 }
@@ -88,3 +92,5 @@ function About() {
     </>
   );
 }
+
+
