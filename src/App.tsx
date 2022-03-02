@@ -14,7 +14,7 @@ export const App:React.FC =()=> {
           (<><Route path="/" element={<Home />} /><Route path="about" element={<About />} /></>)
         :
         <>
-          <Route path="/" element={<Homey />} />
+          <Route path="/" element={<Homey setAuth={setAuthorized}/>} />
         </> 
         }
       </Routes>
@@ -23,20 +23,35 @@ export const App:React.FC =()=> {
 }
 
 // App.js
-function Homey() {
+const Homey=(props: {setAuth:React.Dispatch<React.SetStateAction<boolean>> })=> {
+  const {setAuth} = props;
   const [loginForm, setLoginForm]= React.useState({
-    username: "",
+    email: "",
     password: ""
   })
+  const url = 'http://127.0.0.1:3000/authenticate'
+  const submitLogin  = async ()=>{
+    let res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(loginForm)
+    })
+    if(res.ok){
+      let token = await res.json()
+      setAuth(token.auth_token) 
+    }
+  }
    return (
     <>
       <Box>
-        <TextField onChange={(e)=>setLoginForm(prev => {return {...prev, username: e.target.value }} )} placeholder={'username'} />
+        <TextField onChange={(e)=>setLoginForm(prev => {return {...prev, email: e.target.value }} )} placeholder={'email'} />
         <TextField type="password"
           autoComplete="current-password" onChange={(e)=>setLoginForm(prev => {return {...prev, password: e.target.value }} )} placeholder={'password'} />
       </Box>
       <Box>
-        <Button>
+        <Button onClick={submitLogin}>
           Login
         </Button>
       </Box>
