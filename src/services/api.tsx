@@ -1,4 +1,4 @@
-const url = '127.0.0.1:3000'
+const url = 'http://127.0.0.1:3000'
 export const submitLogin = async (userform: {username: string, password:string}) => {
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
