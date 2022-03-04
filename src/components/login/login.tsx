@@ -9,7 +9,7 @@ const Login =(props: {setAuth:React.Dispatch<React.SetStateAction<boolean>> })=>
     })
 
     //TODO - Extract into services API
-    const url = 'http://127.0.0.1:3000/authenticate'
+    const url = 'http://192.168.0.15:3000/authenticate'
     const submitLogin  = async ()=>{
       let res = await fetch(url, {
         method: 'POST',

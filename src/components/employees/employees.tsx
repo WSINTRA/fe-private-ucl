@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import DataGridTable from "../dataGridTable/dataGridTable";
 
 const Employees = () => {
   const [Employees, setEmployees] = useState({});
@@ -50,13 +51,9 @@ const Employees = () => {
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      <DataGrid
+      <DataGridTable
         rows={rows}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-        disableSelectionOnClick
       />
     </div>
   );
