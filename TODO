@@ -1,5 +1,15 @@
-TODO 
+What would this app look like.
 
-Create API services for login
+From Admin perspective,
+Customer creation and display
+Employee creation and display
+Schedule display
 
-Login CTA should retrn JWT to be used to access any REST endpoints
+Customer display should be able to upload pictures of most recent work
+Customer display should be able to add new notes on the current customer
+Customer display should be able to update next schedule and view current
+
+Employee display should be able to upload picture of employee ID
+Employee display should be able to allocate employee to a customer
+Employee display should be able to view existing employee schedule
+
