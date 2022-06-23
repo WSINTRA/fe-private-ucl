@@ -1,25 +1,21 @@
-import { AccountBalance, People } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { customer } from '../../types/dataTypes';
+import Customers from "../customers/customers";
 
-const Home=()=> {
-    return (
-      <>
-       <nav>
-       <Link to="customers"> <Button startIcon={<AccountBalance />} variant="outlined">Customers</Button></Link>
-       <Link to="employees"> <Button startIcon={<People/>} variant="outlined" >Employees</Button></Link>
-          
-        </nav>
-        <main>
-          {moment().format('MMMM Do YYYY, h:mm:ss a')}
-          <h2>Customers total: 1</h2>
-          <p>You can do this, I believe in you.</p>
-          <h2>Active Employee count: 2</h2>
-        </main>
-       
-      </>
-    );
-  }
+const Home = ({ customers }: { customers: customer[] }) => {
+  console.log(customers)
 
-  export default Home;
+  return (
+    <>
+      <Container>
+        <Typography variant="h4">Todays Date - {moment().format('MMMM Do YYYY')}</Typography>
+        <Customers customers={customers} />
+      </Container>
+    </>
+  );
+}
+
+export default Home;

@@ -1,64 +1,105 @@
+
+
+import Box from '@mui/material/Box';
+import Edit from '@mui/icons-material/Edit';
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
+import Button from '@mui/material/Button';
+import Delete from '@mui/icons-material/Delete';
 import { useState } from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { customer } from '../../types/dataTypes';
+import GenericReactTable from "../genericReactTable/GenericReactTable";
+import { CustomerForm } from './customerForm';
 
-const Customers = () => {
-  const [customers, setCustomers] = useState({});
+const Customers = ({ customers }: { customers: customer[] }) => {
+  const [editMode, setEditMode] = useState(false);
+  const [updatingCell, setUpdatingCell] = useState<any>()
 
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
+  const EditButton: React.FC = (params: any) => {
+    return (
+      <Button
+        startIcon={<Edit />}
+        onClick={() => {
+          setEditMode(true);
+          setUpdatingCell(params.row);
+          params.tableForm(true);
+        }}
+      />
+    );
+  };
+  const PreviewButton: React.FC = (params: any) => {
+    return (
+      <Button
+        startIcon={<VisibilityOutlined />}
+        onClick={() => {
+          setEditMode(false);
+          setUpdatingCell(params.row);
+          params.tableForm(true);
+        }}
+      />
+    );
+  };
+
+  const DeleteButton: React.FC = (params: any) => {
+    return (
+      <>
+        <Button
+          startIcon={<Delete />}
+          onClick={() => {
+            console.log(params)
+          }}
+        />
+      </>
+    );
+  };
+
+  const headers = [
     {
-      field: "firstName",
-      headerName: "First name",
-      width: 150,
-      editable: true,
+      accessor: 'actions',
+      Header: 'Actions',
+      width: 250,
+      disableFilters: true,
+      disableSortBy: true,
     },
+    { accessor: 'first_name', Header: 'First Name', width: 130, },
+    { accessor: 'last_name', Header: 'Last Name', width: 130, },
+    { accessor: 'contact_number', Header: 'Contact', width: 130, },
+    { accessor: 'address', Header: 'Address', width: 130, },
+    { accessor: 'next_service_date', Header: 'Next Service Due', width: 130, },
+  ]
+
+  const tableActions = [
     {
-      field: "lastName",
-      headerName: "Last name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      edit: EditButton,
+      preview: PreviewButton,
+      delete: DeleteButton,
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  const headerOptions = [
+    'columns', 'create'
   ];
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-        disableSelectionOnClick
-      />
-    </div>
+    <Box sx={{ margin: "auto" }}>
+
+      <GenericReactTable
+        title="Customers"
+        data={customers || []}
+        headers={headers}
+        headerOptions={headerOptions}
+        tableActions={tableActions}
+        sortBy={true}
+        setUpdatingCell={setUpdatingCell}
+      >
+        {updatingCell && (
+          <CustomerForm
+            editM={editMode}
+            customer={updatingCell.original}
+            tableCell={updatingCell}
+          />
+        )}
+      </GenericReactTable>
+    </Box>
   );
 };
 export default Customers;
