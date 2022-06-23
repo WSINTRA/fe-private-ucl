@@ -4,6 +4,8 @@ import Divider from '@mui/material/Divider';
 import moment from "moment";
 import { customer } from "../../types/dataTypes";
 import { useState } from 'react';
+import { Button } from '@mui/material';
+import AlertDialogSlide from './nextServiceDatePrompt';
 
 interface customerForm {
     editM: boolean;
@@ -25,10 +27,14 @@ export const CustomerForm = ({ editM, customer, tableCell }: customerForm) => {
         notes: ''
     }
     const [editCustomer, setEditCustomer] = useState(customer || emptyCustomer)
+    const [openServiceDialog, setOpenServiceDialog] = useState(false)
 
     if (editM || (editCustomer === emptyCustomer)) {
         console.log(editCustomer)
-        return <>Some form for editing</>
+        return <>
+            <AlertDialogSlide open={openServiceDialog} setOpen={setOpenServiceDialog} />
+            <Button variant='outlined' onClick={() => setOpenServiceDialog(true)}>Add next Service Date
+            </Button></>
     }
     return <>
         <Box>
