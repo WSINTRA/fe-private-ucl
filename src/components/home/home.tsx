@@ -1,12 +1,10 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import moment from "moment";
-import { Link } from "react-router-dom";
 import { customer } from '../../types/dataTypes';
 import Customers from "../customers/customers";
 
 const Home = ({ customers }: { customers: customer[] }) => {
-  console.log(customers)
 
   return (
     <>

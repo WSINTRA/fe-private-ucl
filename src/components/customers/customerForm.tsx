@@ -3,9 +3,11 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import moment from "moment";
 import { customer } from "../../types/dataTypes";
-import { useState } from 'react';
-import { Button } from '@mui/material';
-import AlertDialogSlide from './nextServiceDatePrompt';
+import { useState, useContext } from 'react';
+import { Button, Container, TextField } from '@mui/material';
+import NextServiceDatePrompt from './nextServiceDatePrompt';
+import { saveNextDate } from '../../services/api';
+import { AuthContext } from '../../services/authContext';
 
 interface customerForm {
     editM: boolean;
@@ -14,8 +16,11 @@ interface customerForm {
     updateCell?: any;
 }
 
-export const CustomerForm = ({ editM, customer, tableCell }: customerForm) => {
-    console.log(editM, customer, tableCell)
+export const CustomerForm = ({ editM, customer, tableCell, updateCell }: customerForm) => {
+    // console.log(editM, customer, tableCell)
+
+    const { token } = useContext(AuthContext);
+    // console.log(token)
     const emptyCustomer: customer = {
         active_status: false,
         address: '',
@@ -28,13 +33,52 @@ export const CustomerForm = ({ editM, customer, tableCell }: customerForm) => {
     }
     const [editCustomer, setEditCustomer] = useState(customer || emptyCustomer)
     const [openServiceDialog, setOpenServiceDialog] = useState(false)
+    const [notes, setNotes] = useState(editCustomer.notes)
 
-    if (editM || (editCustomer === emptyCustomer)) {
-        console.log(editCustomer)
+    const updateTableAndView = (updatedCustomer: customer) => {
+        type resKeys = keyof customer;
+        Object.keys(updatedCustomer).forEach((key) => {
+            const value = updatedCustomer[key as resKeys];
+            updateCell(tableCell.index, key, value);
+        });
+    };
+
+    const saveDate = async (dateValue: Date, recurring: boolean) => {
+        const res = await saveNextDate(token, editCustomer.id as number, dateValue)
+        updateTableAndView(res)
+        setEditCustomer(res)
+        setOpenServiceDialog(false);
+    }
+    const saveNotes = () => {
+        console.log('Save notes', notes);
+    }
+    if (editCustomer === emptyCustomer) {
         return <>
-            <AlertDialogSlide open={openServiceDialog} setOpen={setOpenServiceDialog} />
-            <Button variant='outlined' onClick={() => setOpenServiceDialog(true)}>Add next Service Date
-            </Button></>
+            Something</>
+    }
+
+    if (editM) {
+        return <>
+            <Container>
+                <Box>
+                    <Typography variant="h5" sx={{ marginBottom: '2vh' }}>Next Service for {editCustomer.first_name + " " + editCustomer.last_name}- {moment(editCustomer.next_service_date).format('hh:mm:a MMMM Do YYYY')}</Typography>
+                    <NextServiceDatePrompt handleSave={saveDate} open={openServiceDialog} setOpen={setOpenServiceDialog} />
+                    <Button variant='outlined' onClick={() => setOpenServiceDialog(true)}>Add next Service Date
+                    </Button>
+                </Box>
+                <Box sx={{ marginTop: '2vh' }}>
+                    <TextField
+                        id="outlined-notes"
+                        label="Notes"
+                        multiline
+                        rows={8}
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                    />
+                </Box>
+                <Button onClick={saveNotes} variant='outlined'>Save notes</Button>
+            </Container>
+        </>
     }
     return <>
         <Box>

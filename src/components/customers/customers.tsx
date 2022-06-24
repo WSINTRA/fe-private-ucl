@@ -9,6 +9,7 @@ import { useState } from "react";
 import { customer } from '../../types/dataTypes';
 import GenericReactTable from "../genericReactTable/GenericReactTable";
 import { CustomerForm } from './customerForm';
+import moment from 'moment';
 
 const Customers = ({ customers }: { customers: customer[] }) => {
   const [editMode, setEditMode] = useState(false);
@@ -60,11 +61,12 @@ const Customers = ({ customers }: { customers: customer[] }) => {
       disableFilters: true,
       disableSortBy: true,
     },
+    { accessor: (d: any) => moment(d['next_service_date']).format('hh:mm:a DD MMMM YYYY'), Header: 'Next Service Due', width: 130, },
     { accessor: 'first_name', Header: 'First Name', width: 130, },
     { accessor: 'last_name', Header: 'Last Name', width: 130, },
     { accessor: 'contact_number', Header: 'Contact', width: 130, },
     { accessor: 'address', Header: 'Address', width: 130, },
-    { accessor: 'next_service_date', Header: 'Next Service Due', width: 130, },
+
   ]
 
   const tableActions = [
