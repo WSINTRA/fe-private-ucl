@@ -11,9 +11,13 @@ export const SignUpForm = () => {
       <Link to="/">
         <ArrowBack />
       </Link>
-      <Container sx={{ padding: "2%", border: "3px solid silver" }}>
+      <Container
+        sx={{ padding: "8px", border: "3px solid silver", borderRadius: "8px" }}
+      >
         <Box>
-          <Typography>Create a user representing your company</Typography>
+          <Typography sx={{ margin: "12px" }}>
+            Create a user representing your company
+          </Typography>
           <Divider />
         </Box>
         <Box
@@ -35,7 +39,9 @@ export const SignUpForm = () => {
             <TextField label="Password" />
           </Box>
           <Divider />
-          <Typography>Fill in some basic company details</Typography>
+          <Typography sx={{ margin: "12px" }}>
+            Fill in some basic company details
+          </Typography>
           <Box>
             <TextField label="Company name" />
             <TextField fullWidth label="Company address" />
