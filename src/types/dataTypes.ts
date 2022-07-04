@@ -13,3 +13,13 @@ export type customer = {
     notes: string
     updated_at?: string
 }
+
+export type company = {
+    company_name: string;
+    address: string;
+    logo_url: string;
+    id: number;
+    user_id: number;
+    created_at: string;
+    updated_at: string;
+}
