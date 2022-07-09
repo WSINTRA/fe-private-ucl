@@ -18,16 +18,21 @@ export const App: React.FC = () => {
   const [company, setCompany] = React.useState<company>();
 
   React.useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setAuthorized(loggedInUser);
+    }
     if (authorized) {
       (async () => {
         setCustomers(await fetchCustomers(authorized));
+        localStorage.setItem("user", authorized);
       })();
     }
   }, [authorized]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <AuthProvider token={authorized}>
+      <AuthProvider token={authorized} setToken={setAuthorized}>
         <div className="App">
           <h1>{`${
             company?.company_name || "Welcome to Service Scheduler"

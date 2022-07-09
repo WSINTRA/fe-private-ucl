@@ -21,9 +21,9 @@ const Login = (props: {
     let res = await getAuthToken(loginForm);
     if (res?.ok) {
       let token = await res?.json();
+      navigate("/");
       setAuth(token.auth_token);
       setCompany(token.company);
-      navigate("/");
     }
   };
   return (
@@ -38,7 +38,6 @@ const Login = (props: {
             "& .MuiTextField-root": { m: 1, width: "30ch" },
           }}
           noValidate
-          autoComplete="off"
         >
           <TextField
             onChange={(e) =>
@@ -47,6 +46,8 @@ const Login = (props: {
               })
             }
             placeholder={"email"}
+            type="email"
+            autoComplete="username"
           />
           <TextField
             type="password"
