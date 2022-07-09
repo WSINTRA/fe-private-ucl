@@ -22,6 +22,8 @@ const Login = (props: {
     if (res?.ok) {
       let token = await res?.json();
       navigate("/");
+      localStorage.setItem("token", token.auth_token);
+      localStorage.setItem("user", JSON.stringify(token.company));
       setAuth(token.auth_token);
       setCompany(token.company);
     }

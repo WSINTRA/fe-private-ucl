@@ -9,11 +9,12 @@ import { customer } from "../../types/dataTypes";
 import Customers from "../customers/customers";
 
 const Home = ({ customers }: { customers: customer[] }) => {
-  const { setToken } = useContext(AuthContext);
+  const { setToken, setCompany } = useContext(AuthContext);
   let navigate = useNavigate();
   const logout = () => {
     localStorage.clear();
     setToken("");
+    setCompany(undefined);
     navigate("/");
   };
   return (
