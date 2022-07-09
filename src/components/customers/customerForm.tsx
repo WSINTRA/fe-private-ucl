@@ -62,18 +62,30 @@ export const CustomerForm = ({
     updateTableAndView(res);
     setEditCustomer(res);
   };
-  const CustomerDetailsForm = () => {
+  const customerDetailsForm = () => {
     return (
-      <Box>
-        <Typography>
-          Contact name: {editCustomer.first_name + " " + editCustomer.last_name}{" "}
-        </Typography>
-        <TextField placeholder="Full name" />
+      <Box key="customer_form">
+        <Typography>First name:</Typography>
+        <TextField
+          onChange={(e) =>
+            setEditCustomer({ ...editCustomer, first_name: e.target.value })
+          }
+          placeholder="First name"
+          value={editCustomer.first_name}
+        />
+        <Typography>Last name:</Typography>
+        <TextField
+          onChange={(e) =>
+            setEditCustomer({ ...editCustomer, last_name: e.target.value })
+          }
+          placeholder="Last name"
+          value={editCustomer.last_name}
+        />
         <Typography>Address: {editCustomer.address}</Typography>
         <TextField placeholder="Address" />
         <Typography>Contact tel: {editCustomer.contact_number}</Typography>
         <TextField placeholder="Phone number" />
-        <Typography>
+        <Box>
           <NextServiceDatePrompt
             handleSave={(d) => console.log(d)}
             open={openServiceDialog}
@@ -82,7 +94,8 @@ export const CustomerForm = ({
           <Button variant="outlined" onClick={() => setOpenServiceDialog(true)}>
             Add first service date
           </Button>
-        </Typography>
+        </Box>
+        <Button variant="contained">Save</Button>
       </Box>
     );
   };
@@ -131,11 +144,7 @@ export const CustomerForm = ({
     );
   }
   if (createM) {
-    return (
-      <>
-        <CustomerDetailsForm />
-      </>
-    );
+    return <>{customerDetailsForm()}</>;
   }
   return (
     <>
