@@ -18,6 +18,19 @@ export const getAuthToken = async (userform: {
   }
 };
 
+export const signUpNewUser = async (payload: signUpPayload) => {
+  const response = await fetch(url + "/companies", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (response.ok) {
+    return response.json();
+  }
+};
+
 export const fetchCustomers = async (token: string) => {
   const response = await fetch(url + "/customers", {
     method: "GET",
@@ -54,13 +67,22 @@ export const saveNextDate = async (
   }
 };
 
-export const signUpNewUser = async (payload: signUpPayload) => {
-  const response = await fetch(url + "/companies", {
+export const saveCustomerNote = async (
+  token: string,
+  customerId: number,
+  note: string
+) => {
+  const response = await fetch(url + "/customers/update_note", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      id: customerId,
+      note: note,
+    }),
   });
   if (response.ok) {
     return response.json();
