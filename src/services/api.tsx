@@ -1,4 +1,5 @@
 import moment from "moment";
+import { signUpPayload } from "../types/dataTypes";
 
 const url = "http://127.0.0.1:3000";
 export const getAuthToken = async (userform: {
@@ -47,6 +48,19 @@ export const saveNextDate = async (
       id: customerId,
       next_service_date: moment.utc(date).format("HH:mm DD MMMM YYYY"),
     }),
+  });
+  if (response.ok) {
+    return response.json();
+  }
+};
+
+export const signUpNewUser = async (payload: signUpPayload) => {
+  const response = await fetch(url + "/companies", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
   });
   if (response.ok) {
     return response.json();

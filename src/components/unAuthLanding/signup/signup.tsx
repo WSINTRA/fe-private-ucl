@@ -3,9 +3,32 @@ import { Button, Divider, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { signUpNewUser } from "../../../services/api";
+import { signUpPayload } from "../../../types/dataTypes";
 
 export const SignUpForm = () => {
+  const [companyName, setCompanyName] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const submitNewUser = async () => {
+    const payload: signUpPayload = {
+      user: {
+        name: name,
+        email: email,
+        password: password,
+      },
+      company: {
+        company_name: companyName,
+        address: address,
+      },
+    };
+    let response = await signUpNewUser(payload);
+    console.log(response);
+  };
   return (
     <>
       <Link to="/">
@@ -29,25 +52,43 @@ export const SignUpForm = () => {
           autoComplete="off"
         >
           <Box>
-            <TextField label="Company representive name" />
-            <TextField label="Role in company" />
+            <TextField
+              onChange={(e) => setName(e.target.value)}
+              label="Company representive name"
+            />
           </Box>
           <Box>
-            <TextField sx={{ width: "100vw" }} label="Email" />
+            <TextField
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ width: "100vw" }}
+              label="Email"
+            />
           </Box>
           <Box>
-            <TextField label="Password" />
+            <TextField
+              onChange={(e) => setPassword(e.target.value)}
+              label="Password"
+            />
           </Box>
           <Divider />
           <Typography sx={{ margin: "12px" }}>
             Fill in some basic company details
           </Typography>
           <Box>
-            <TextField label="Company name" />
-            <TextField fullWidth label="Company address" />
+            <TextField
+              onChange={(e) => setCompanyName(e.target.value)}
+              label="Company name"
+            />
+            <TextField
+              onChange={(e) => setAddress(e.target.value)}
+              fullWidth
+              label="Company address"
+            />
             {/* {TODO - Company Logo upload functionality} */}
           </Box>
-          <Button variant="outlined">Submit</Button>
+          <Button onClick={() => submitNewUser()} variant="outlined">
+            Submit
+          </Button>
         </Box>
       </Container>
     </>

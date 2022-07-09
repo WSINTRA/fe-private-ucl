@@ -23,3 +23,15 @@ export type company = {
     created_at: string;
     updated_at: string;
 }
+
+export type signUpPayload = {
+    user: {
+        name: string;
+        email: string;
+        password: string;
+    };
+    company: {
+        company_name: string;
+        address: string;
+    }
+};
