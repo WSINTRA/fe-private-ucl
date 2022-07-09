@@ -41,7 +41,7 @@ import React, {
   ReactElement,
   JSXElementConstructor,
   Fragment,
-} from 'react';
+} from "react";
 import {
   Column,
   useTable,
@@ -52,38 +52,38 @@ import {
   useFilters,
   TableState,
   SortingRule,
-} from 'react-table';
-import { GridSeparatorIcon } from '@mui/x-data-grid/components/icons';
-import Add from '@mui/icons-material/Add';
-import ArrowBack from '@mui/icons-material/ArrowBack';
-import FirstPage from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPage from '@mui/icons-material/LastPage';
-import SearchOutlined from '@mui/icons-material/SearchOutlined';
-import ViewColumn from '@mui/icons-material/ViewColumn';
-import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import TableBody from '@mui/material/TableBody';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import { useTheme } from '@mui/material/styles';
+} from "react-table";
+import { GridSeparatorIcon } from "@mui/x-data-grid/components/icons";
+import Add from "@mui/icons-material/Add";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import FirstPage from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPage from "@mui/icons-material/LastPage";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import ViewColumn from "@mui/icons-material/ViewColumn";
+import { TablePaginationActionsProps } from "@mui/material/TablePagination/TablePaginationActions";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import TableBody from "@mui/material/TableBody";
+import TableFooter from "@mui/material/TableFooter";
+import TablePagination from "@mui/material/TablePagination";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { useTheme } from "@mui/material/styles";
 
 interface GRTprops {
   data: Record<string, unknown>[];
@@ -110,6 +110,7 @@ interface GRTprops {
   ) => Promise<any>;
   children?: React.ReactNode;
   topPageination?: boolean;
+  setCreateMode?: React.Dispatch<boolean>;
 }
 
 const GenericReactTable: React.FC<GRTprops> = (props) => {
@@ -119,7 +120,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
     hiddenCols,
     tableActions,
     title,
-    searchTitle = 'Search',
+    searchTitle = "Search",
     setUpdatingCell,
     headerOptions,
     pageNumber = 1,
@@ -135,13 +136,14 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
     sortingFunc,
     manualSort,
     topPageination = false,
+    setCreateMode,
   } = props;
   //Anchor for Column Menu
   const [anchorCM, setAnchorCM] = useState<null | HTMLElement>(null);
   const [tableForm, setTableForm] = useState(false);
   const [tableData, setTableData] = useState(data);
   const [skipPageReset, setSkipPageReset] = useState(false);
-  const [searchString, setSearchString] = useState(searchTerm || '');
+  const [searchString, setSearchString] = useState(searchTerm || "");
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
   // When our cell renderer calls updateMyData, we'll use
@@ -253,13 +255,14 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
   };
 
   const headerActions = [
-    { component: <ViewColumn />, name: 'columns', onClick: handleShowColMenu },
+    { component: <ViewColumn />, name: "columns", onClick: handleShowColMenu },
     {
       component: <Add />,
-      name: 'create',
+      name: "create",
       onClick: () => {
-        if (setUpdatingCell) {
+        if (setUpdatingCell && setCreateMode) {
           setUpdatingCell(true);
+          setCreateMode(true);
         }
         setTableForm(true);
       },
@@ -323,14 +326,14 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
           disabled={page === 0}
           aria-label="first page"
         >
-          {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
+          {theme.direction === "rtl" ? <LastPage /> : <FirstPage />}
         </IconButton>
         <IconButton
           onClick={handleBackButtonClick}
           disabled={page === 0}
           aria-label="previous page"
         >
-          {theme.direction === 'rtl' ? (
+          {theme.direction === "rtl" ? (
             <KeyboardArrowRight />
           ) : (
             <KeyboardArrowLeft />
@@ -341,7 +344,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="next page"
         >
-          {theme.direction === 'rtl' ? (
+          {theme.direction === "rtl" ? (
             <KeyboardArrowLeft />
           ) : (
             <KeyboardArrowRight />
@@ -352,7 +355,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="last page"
         >
-          {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
+          {theme.direction === "rtl" ? <FirstPage /> : <LastPage />}
         </IconButton>
       </Box>
     );
@@ -387,29 +390,29 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
     <>
       {!tableForm ? (
         <TableContainer
-          sx={{ height: '85vh', border: '1px solid rgb(233,233,233)' }}
+          sx={{ height: "85vh", border: "1px solid rgb(233,233,233)" }}
           data-id="table"
         >
           <Table {...getTableProps()}>
             <TableHead>
               <Box
-                component={'tr'}
+                component={"tr"}
                 sx={{
-                  height: '60px',
+                  height: "60px",
                   paddingLeft: 2,
                   paddingRight: 2,
-                  display: 'inline-flex',
-                  flexDirection: 'row',
+                  display: "inline-flex",
+                  flexDirection: "row",
                 }}
               >
                 <Typography
-                  component={'th'}
+                  component={"th"}
                   sx={{
-                    paddingRight: '24',
-                    marginRight: '2rem',
-                    alignSelf: 'center',
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
+                    paddingRight: "24",
+                    marginRight: "2rem",
+                    alignSelf: "center",
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
                   }}
                 >
                   {title}
@@ -418,26 +421,26 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                   if (headerOptions && headerOptions.includes(action.name)) {
                     return (
                       <Box
-                        component={'th'}
+                        component={"th"}
                         sx={{
-                          display: 'flex',
-                          cursor: 'pointer',
-                          alignItems: 'center',
-                          marginRight: '1rem',
+                          display: "flex",
+                          cursor: "pointer",
+                          alignItems: "center",
+                          marginRight: "1rem",
                         }}
                         key={i}
                         onClick={action.onClick}
                       >
                         {action.component}
                         <Typography
-                          component={'p'}
+                          component={"p"}
                           sx={{
                             opacity: 0.6,
-                            textTransform: 'uppercase',
-                            alignSelf: 'center',
-                            fontSize: '0.7rem',
-                            fontWeight: 'bold',
-                            marginLeft: '0.5rem',
+                            textTransform: "uppercase",
+                            alignSelf: "center",
+                            fontSize: "0.7rem",
+                            fontWeight: "bold",
+                            marginLeft: "0.5rem",
                           }}
                         >
                           {action.name}
@@ -452,17 +455,17 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                   open={columnMenuOpen}
                   onClose={closeColMenu}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                 >
                   {allColumns.map((column) => (
                     <MenuItem key={column.id}>
-                      <FormGroup sx={{ width: '100%' }}>
+                      <FormGroup sx={{ width: "100%" }}>
                         <FormControlLabel
                           control={
                             <Switch {...column.getToggleHiddenProps()} />
@@ -477,7 +480,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
               {setSearchTerm && (
                 <Box
                   component="tr"
-                  sx={{ display: 'flex', alignItems: 'center', paddingLeft: 2 }}
+                  sx={{ display: "flex", alignItems: "center", paddingLeft: 2 }}
                 >
                   <Box component="td">
                     <TextField
@@ -486,14 +489,14 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                       variant="outlined"
                       value={searchString}
                       onChange={(e) => setSearchString(e.target.value)}
-                      onKeyDown={(e) => e.code === 'Enter' && handleSearch()}
-                      sx={{ width: '30vw' }}
+                      onKeyDown={(e) => e.code === "Enter" && handleSearch()}
+                      sx={{ width: "30vw" }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
                             <SearchOutlined
                               onClick={handleSearch}
-                              sx={{ cursor: 'pointer' }}
+                              sx={{ cursor: "pointer" }}
                             />
                           </InputAdornment>
                         ),
@@ -528,17 +531,17 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                       {...column.getHeaderProps([
                         {
                           style: {
-                            display: 'flex',
-                            paddingLeft: '14px',
-                            paddingRight: '14px',
-                            paddingTop: '8px',
-                            paddingBottom: '8px',
+                            display: "flex",
+                            paddingLeft: "14px",
+                            paddingRight: "14px",
+                            paddingTop: "8px",
+                            paddingBottom: "8px",
                           },
                         },
                       ])}
                       sx={{
-                        height: '60px',
-                        border: 'solid rgba(233,233,233,0.1)',
+                        height: "60px",
+                        border: "solid rgba(233,233,233,0.1)",
                       }}
                     >
                       {sortBy ? (
@@ -548,7 +551,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                               {!column.disableSortBy ? (
                                 <Typography
                                   variant="h6"
-                                  sx={{ overflow: 'hidden' }}
+                                  sx={{ overflow: "hidden" }}
                                   {...column.getHeaderProps(
                                     column.getSortByToggleProps()
                                   )}
@@ -566,15 +569,15 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                                     );
                                   }}
                                 >
-                                  {column.render('Header')}
-                                  {column.Header !== 'Actions' && (
+                                  {column.render("Header")}
+                                  {column.Header !== "Actions" && (
                                     <TableSortLabel
                                       active={column.isSorted}
                                       direction={
                                         //@ts-ignore
-                                        column.sortDirection === 'ASC'
-                                          ? 'asc'
-                                          : 'desc'
+                                        column.sortDirection === "ASC"
+                                          ? "asc"
+                                          : "desc"
                                       }
                                     />
                                   )}
@@ -582,54 +585,54 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                               ) : (
                                 <Typography
                                   variant="h6"
-                                  sx={{ overflow: 'hidden' }}
+                                  sx={{ overflow: "hidden" }}
                                   {...column.getHeaderProps(
                                     column.getSortByToggleProps()
                                   )}
                                 >
-                                  {column.render('Header')}
+                                  {column.render("Header")}
                                 </Typography>
                               )}
                             </>
                           ) : (
                             <Typography
                               variant="h6"
-                              sx={{ overflow: 'hidden' }}
+                              sx={{ overflow: "hidden" }}
                               {...column.getHeaderProps(
                                 column.getSortByToggleProps()
                               )}
                             >
-                              {column.render('Header')}
-                              {column.Header !== 'Actions' && (
+                              {column.render("Header")}
+                              {column.Header !== "Actions" && (
                                 <TableSortLabel
                                   active={column.isSorted}
                                   direction={
-                                    column.isSortedDesc ? 'desc' : 'asc'
+                                    column.isSortedDesc ? "desc" : "asc"
                                   }
                                 />
                               )}
                             </Typography>
                           )}
 
-                          {column.canFilter ? column.render('Filter') : null}
+                          {column.canFilter ? column.render("Filter") : null}
                         </>
                       ) : (
                         <Typography
                           {...column.getHeaderProps()}
-                          sx={{ overflow: 'hidden' }}
+                          sx={{ overflow: "hidden" }}
                           variant="h6"
                         >
-                          {column.render('Header')}
-                          {column.canFilter ? column.render('Filter') : null}
+                          {column.render("Header")}
+                          {column.canFilter ? column.render("Filter") : null}
                         </Typography>
                       )}
                       <Box>
                         <GridSeparatorIcon
                           color="disabled"
                           sx={{
-                            marginRight: '-28px',
-                            '&:hover': {
-                              background: 'rgba(233,233,233,0.4)',
+                            marginRight: "-28px",
+                            "&:hover": {
+                              background: "rgba(233,233,233,0.4)",
                               opacity: 0.4,
                             },
                           }}
@@ -649,10 +652,10 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                     <TableRow
                       {...row.getRowProps()}
                       sx={{
-                        border: '1px solid rgba(233,233,233,0.4)',
-                        overflow: 'hidden',
-                        '&:hover': {
-                          backgroundColor: 'rgba(233,233,233,0.5)',
+                        border: "1px solid rgba(233,233,233,0.4)",
+                        overflow: "hidden",
+                        "&:hover": {
+                          backgroundColor: "rgba(233,233,233,0.5)",
                         },
                       }}
                     >
@@ -660,41 +663,41 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                         return (
                           <Fragment key={i}>
                             <TableCell
-                              sx={{ alignSelf: 'center', border: 'none' }}
+                              sx={{ alignSelf: "center", border: "none" }}
                               {...cell.getCellProps()}
                             >
                               {
                                 // eslint-disable-next-line array-callback-return
-                                cell.column.Header !== 'Actions'
-                                  ? cell.render('Cell')
+                                cell.column.Header !== "Actions"
+                                  ? cell.render("Cell")
                                   : tableActions &&
-                                  tableActions.map((action, i) => {
-                                    return (
-                                      <Fragment key={i}>
-                                        {/* {Update here for more specific uses of actions, this order also affects UI} */}
-                                        {action['preview'] &&
-                                          action['preview']({
-                                            ...cell,
-                                            tableForm: setTableForm,
-                                          })}
-                                        {action['edit'] &&
-                                          action['edit']({
-                                            ...cell,
-                                            tableForm: setTableForm,
-                                          })}
-                                        {action['create'] &&
-                                          action['create']({
-                                            ...cell,
-                                            tableForm: setTableForm,
-                                          })}
-                                        {action['delete'] &&
-                                          action['delete']({
-                                            ...cell,
-                                            deleteRow,
-                                          })}
-                                      </Fragment>
-                                    );
-                                  })
+                                    tableActions.map((action, i) => {
+                                      return (
+                                        <Fragment key={i}>
+                                          {/* {Update here for more specific uses of actions, this order also affects UI} */}
+                                          {action["preview"] &&
+                                            action["preview"]({
+                                              ...cell,
+                                              tableForm: setTableForm,
+                                            })}
+                                          {action["edit"] &&
+                                            action["edit"]({
+                                              ...cell,
+                                              tableForm: setTableForm,
+                                            })}
+                                          {action["create"] &&
+                                            action["create"]({
+                                              ...cell,
+                                              tableForm: setTableForm,
+                                            })}
+                                          {action["delete"] &&
+                                            action["delete"]({
+                                              ...cell,
+                                              deleteRow,
+                                            })}
+                                        </Fragment>
+                                      );
+                                    })
                               }
                             </TableCell>
                           </Fragment>
@@ -707,17 +710,17 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
             </TableBody>
             <TableFooter
               sx={{
-                position: 'absolute',
-                bottom: '6vh',
+                position: "absolute",
+                bottom: "6vh",
                 zIndex: 1,
                 right: 0,
-                width: '100%',
+                width: "100%",
               }}
             >
               <TableRow>
                 {!topPageination && setPageSize && setPageNumber && (
                   <TablePagination
-                    sx={{ position: 'absolute', right: '0' }}
+                    sx={{ position: "absolute", right: "0" }}
                     //If no total count then -1 will count all items
                     count={totalCount || -1}
                     // pageNumber minus one because page is zero indexed and our backend page numbers start at 1
@@ -735,7 +738,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
         </TableContainer>
       ) : (
         <>
-          <Box sx={{ display: 'flex', width: '80vw' }}>
+          <Box sx={{ display: "flex", width: "80vw" }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => {
@@ -746,7 +749,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                   tableActions[0] &&
                   tableActions[0].reset_form
                 ) {
-                  tableActions[0]['reset_form'](false);
+                  tableActions[0]["reset_form"](false);
                 }
               }}
             >

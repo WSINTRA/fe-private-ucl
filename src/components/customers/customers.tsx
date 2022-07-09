@@ -1,25 +1,25 @@
-
-
-import Box from '@mui/material/Box';
-import Edit from '@mui/icons-material/Edit';
-import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
-import Button from '@mui/material/Button';
-import Delete from '@mui/icons-material/Delete';
+import Box from "@mui/material/Box";
+import Edit from "@mui/icons-material/Edit";
+import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
+import Button from "@mui/material/Button";
+import Delete from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { customer } from '../../types/dataTypes';
+import { customer } from "../../types/dataTypes";
 import GenericReactTable from "../genericReactTable/GenericReactTable";
-import { CustomerForm } from './customerForm';
-import moment from 'moment';
+import { CustomerForm } from "./customerForm";
+import moment from "moment";
 
 const Customers = ({ customers }: { customers: customer[] }) => {
   const [editMode, setEditMode] = useState(false);
-  const [updatingCell, setUpdatingCell] = useState<any>()
+  const [createMode, setCreateMode] = useState(false);
+  const [updatingCell, setUpdatingCell] = useState<any>();
 
   const EditButton: React.FC = (params: any) => {
     return (
       <Button
         startIcon={<Edit />}
         onClick={() => {
+          setCreateMode(false);
           setEditMode(true);
           setUpdatingCell(params.row);
           params.tableForm(true);
@@ -33,6 +33,7 @@ const Customers = ({ customers }: { customers: customer[] }) => {
         startIcon={<VisibilityOutlined />}
         onClick={() => {
           setEditMode(false);
+          setCreateMode(false);
           setUpdatingCell(params.row);
           params.tableForm(true);
         }}
@@ -46,7 +47,7 @@ const Customers = ({ customers }: { customers: customer[] }) => {
         <Button
           startIcon={<Delete />}
           onClick={() => {
-            console.log(params)
+            console.log(params);
           }}
         />
       </>
@@ -55,19 +56,23 @@ const Customers = ({ customers }: { customers: customer[] }) => {
 
   const headers = [
     {
-      accessor: 'actions',
-      Header: 'Actions',
+      accessor: "actions",
+      Header: "Actions",
       width: 250,
       disableFilters: true,
       disableSortBy: true,
     },
-    { accessor: (d: any) => moment(d['next_service_date']).format('hh:mm:a DD MMMM YYYY'), Header: 'Next Service Due', width: 130, },
-    { accessor: 'first_name', Header: 'First Name', width: 130, },
-    { accessor: 'last_name', Header: 'Last Name', width: 130, },
-    { accessor: 'contact_number', Header: 'Contact', width: 130, },
-    { accessor: 'address', Header: 'Address', width: 130, },
-
-  ]
+    {
+      accessor: (d: any) =>
+        moment(d["next_service_date"]).format("hh:mm:a DD MMMM YYYY"),
+      Header: "Next Service Due",
+      width: 130,
+    },
+    { accessor: "first_name", Header: "First Name", width: 130 },
+    { accessor: "last_name", Header: "Last Name", width: 130 },
+    { accessor: "contact_number", Header: "Contact", width: 130 },
+    { accessor: "address", Header: "Address", width: 130 },
+  ];
 
   const tableActions = [
     {
@@ -77,13 +82,10 @@ const Customers = ({ customers }: { customers: customer[] }) => {
     },
   ];
 
-  const headerOptions = [
-    'columns', 'create'
-  ];
+  const headerOptions = ["columns", "create"];
 
   return (
     <Box sx={{ margin: "auto" }}>
-
       <GenericReactTable
         title="Customers"
         data={customers || []}
@@ -92,10 +94,12 @@ const Customers = ({ customers }: { customers: customer[] }) => {
         tableActions={tableActions}
         sortBy={true}
         setUpdatingCell={setUpdatingCell}
+        setCreateMode={setCreateMode}
       >
         {updatingCell && (
           <CustomerForm
             editM={editMode}
+            createM={createMode}
             customer={updatingCell.original}
             tableCell={updatingCell}
           />

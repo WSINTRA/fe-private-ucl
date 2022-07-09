@@ -11,6 +11,7 @@ import { AuthContext } from "../../services/authContext";
 
 interface customerForm {
   editM: boolean;
+  createM: boolean;
   customer: customer;
   tableCell?: any;
   updateCell?: any;
@@ -18,6 +19,7 @@ interface customerForm {
 
 export const CustomerForm = ({
   editM,
+  createM,
   customer,
   tableCell,
   updateCell,
@@ -36,6 +38,7 @@ export const CustomerForm = ({
     next_service_date: null,
     notes: "",
   };
+
   const [editCustomer, setEditCustomer] = useState(customer || emptyCustomer);
   const [openServiceDialog, setOpenServiceDialog] = useState(false);
   const [notes, setNotes] = useState("");
@@ -56,13 +59,34 @@ export const CustomerForm = ({
   };
   const saveNotes = async () => {
     const res = await saveCustomerNote(token, editCustomer.id as number, notes);
+    updateTableAndView(res);
     setEditCustomer(res);
   };
-  if (editCustomer === emptyCustomer) {
-    return <>Something</>;
-  }
-
-  if (editM) {
+  const CustomerDetailsForm = () => {
+    return (
+      <Box>
+        <Typography>
+          Contact name: {editCustomer.first_name + " " + editCustomer.last_name}{" "}
+        </Typography>
+        <TextField placeholder="Full name" />
+        <Typography>Address: {editCustomer.address}</Typography>
+        <TextField placeholder="Address" />
+        <Typography>Contact tel: {editCustomer.contact_number}</Typography>
+        <TextField placeholder="Phone number" />
+        <Typography>
+          <NextServiceDatePrompt
+            handleSave={(d) => console.log(d)}
+            open={openServiceDialog}
+            setOpen={setOpenServiceDialog}
+          />
+          <Button variant="outlined" onClick={() => setOpenServiceDialog(true)}>
+            Add first service date
+          </Button>
+        </Typography>
+      </Box>
+    );
+  };
+  if (editM && !createM) {
     return (
       <>
         <Container>
@@ -103,6 +127,13 @@ export const CustomerForm = ({
             Save notes
           </Button>
         </Container>
+      </>
+    );
+  }
+  if (createM) {
+    return (
+      <>
+        <CustomerDetailsForm />
       </>
     );
   }
