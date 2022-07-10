@@ -4,10 +4,18 @@ import Divider from "@mui/material/Divider";
 import moment from "moment";
 import { customer } from "../../types/dataTypes";
 import { useState, useContext } from "react";
-import { Button, Container, TextField } from "@mui/material";
+import {
+  Button,
+  Container,
+  FormControl,
+  FormGroup,
+  Stack,
+  TextField,
+} from "@mui/material";
 import NextServiceDatePrompt from "./nextServiceDatePrompt";
 import { saveCustomerNote, saveNextDate } from "../../services/api";
 import { AuthContext } from "../../services/authContext";
+import { DateTimePicker } from "@mui/x-date-pickers";
 
 interface customerForm {
   editM: boolean;
@@ -24,10 +32,8 @@ export const CustomerForm = ({
   tableCell,
   updateCell,
 }: customerForm) => {
-  // console.log(editM, customer, tableCell)
-
   const { token } = useContext(AuthContext);
-  // console.log(token)
+
   const emptyCustomer: customer = {
     active_status: false,
     address: "",
@@ -42,6 +48,11 @@ export const CustomerForm = ({
   const [editCustomer, setEditCustomer] = useState(customer || emptyCustomer);
   const [openServiceDialog, setOpenServiceDialog] = useState(false);
   const [notes, setNotes] = useState("");
+  const [date, setDate] = useState<Date | null>(moment().toDate());
+
+  const handleChange = (newDate: Date | null) => {
+    setDate(newDate);
+  };
 
   const updateTableAndView = (updatedCustomer: customer) => {
     type resKeys = keyof customer;
@@ -50,9 +61,17 @@ export const CustomerForm = ({
       updateCell(tableCell.index, key, value);
     });
   };
-
-  const saveDate = async (dateValue: Date, recurring: boolean) => {
-    const res = await saveNextDate(token, editCustomer.id as number, dateValue);
+  const saveNewCustomer = () => {
+    //TODO - Perform validations
+    console.log("Save customer", editCustomer);
+  };
+  const saveDate = async (dateValue: Date, rFrequency: string) => {
+    const res = await saveNextDate(
+      token,
+      editCustomer.id as number,
+      dateValue,
+      rFrequency
+    );
     updateTableAndView(res);
     setEditCustomer(res);
     setOpenServiceDialog(false);
@@ -65,37 +84,66 @@ export const CustomerForm = ({
   const customerDetailsForm = () => {
     return (
       <Box key="customer_form">
-        <Typography>First name:</Typography>
-        <TextField
-          onChange={(e) =>
-            setEditCustomer({ ...editCustomer, first_name: e.target.value })
-          }
-          placeholder="First name"
-          value={editCustomer.first_name}
-        />
-        <Typography>Last name:</Typography>
-        <TextField
-          onChange={(e) =>
-            setEditCustomer({ ...editCustomer, last_name: e.target.value })
-          }
-          placeholder="Last name"
-          value={editCustomer.last_name}
-        />
-        <Typography>Address: {editCustomer.address}</Typography>
-        <TextField placeholder="Address" />
-        <Typography>Contact tel: {editCustomer.contact_number}</Typography>
-        <TextField placeholder="Phone number" />
-        <Box>
-          <NextServiceDatePrompt
-            handleSave={(d) => console.log(d)}
-            open={openServiceDialog}
-            setOpen={setOpenServiceDialog}
-          />
-          <Button variant="outlined" onClick={() => setOpenServiceDialog(true)}>
-            Add first service date
-          </Button>
-        </Box>
-        <Button variant="contained">Save</Button>
+        <FormControl
+          fullWidth
+          sx={{ margin: "auto", marginTop: "2vh", padding: "24px" }}
+        >
+          <Stack spacing={2}>
+            <TextField
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, first_name: e.target.value })
+              }
+              placeholder="First name"
+              value={editCustomer.first_name}
+              type="text"
+            />
+
+            <TextField
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, last_name: e.target.value })
+              }
+              placeholder="Last name"
+              value={editCustomer.last_name}
+              type="text"
+            />
+
+            <TextField
+              placeholder="Address"
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, address: e.target.value })
+              }
+              value={editCustomer.address}
+              type="text"
+            />
+
+            <TextField
+              onChange={(e) =>
+                setEditCustomer({
+                  ...editCustomer,
+                  contact_number: e.target.value,
+                })
+              }
+              placeholder="Contact"
+              value={editCustomer.contact_number}
+              type="tel"
+            />
+            <Box>
+              <FormGroup>
+                <DateTimePicker
+                  label="First Service Date"
+                  value={date}
+                  onChange={handleChange}
+                  renderInput={(params) => (
+                    <TextField sx={{ marginTop: "2px" }} {...params} />
+                  )}
+                />
+              </FormGroup>
+            </Box>
+            <Button onClick={() => saveNewCustomer()} variant="contained">
+              Save
+            </Button>
+          </Stack>
+        </FormControl>
       </Box>
     );
   };

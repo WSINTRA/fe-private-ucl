@@ -68,6 +68,7 @@ const Customers = ({ customers }: { customers: customer[] }) => {
       Header: "Next Service Due",
       width: 130,
     },
+    { accessor: "recurring_service", Header: "Recurring", width: 130 },
     { accessor: "first_name", Header: "First Name", width: 130 },
     { accessor: "last_name", Header: "Last Name", width: 130 },
     { accessor: "contact_number", Header: "Contact", width: 130 },

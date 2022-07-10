@@ -48,7 +48,8 @@ export const fetchCustomers = async (token: string) => {
 export const saveNextDate = async (
   token: string,
   customerId: number,
-  date: Date
+  date: Date,
+  recurring: string
 ) => {
   const response = await fetch(url + "/customers/create_next_service", {
     method: "POST",
@@ -60,6 +61,7 @@ export const saveNextDate = async (
     body: JSON.stringify({
       id: customerId,
       next_service_date: moment.utc(date).format("HH:mm DD MMMM YYYY"),
+      recurring: recurring,
     }),
   });
   if (response.ok) {
