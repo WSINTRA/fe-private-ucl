@@ -6,16 +6,13 @@ export const getAuthToken = async (userform: {
   email: string;
   password: string;
 }) => {
-  let res = await fetch(url + "/authenticate", {
+  return await fetch(url + "/authenticate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(userform),
   });
-  if (res.ok) {
-    return res;
-  }
 };
 
 export const signUpNewUser = async (payload: signUpPayload) => {

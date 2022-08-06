@@ -5,6 +5,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthToken } from "../../../services/api";
 import { company } from "../../../types/dataTypes";
+import GenericSnackbar from "../../genericSnackbar/genericSnackbar";
 
 const Login = (props: {
   setAuth: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +17,8 @@ const Login = (props: {
     email: "",
     password: "",
   });
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false);
+  const [snackMsg, setSnackMsg] = React.useState("");
 
   const submitLogin = async () => {
     let res = await getAuthToken(loginForm);
@@ -26,6 +29,11 @@ const Login = (props: {
       localStorage.setItem("user", JSON.stringify(token.company));
       setAuth(token.auth_token);
       setCompany(token.company);
+    } else {
+      const { error } = await res.json();
+      const { user_authentication } = error;
+      setSnackBarOpen(true);
+      setSnackMsg(`${user_authentication}`);
     }
   };
   return (
@@ -65,6 +73,12 @@ const Login = (props: {
             <Button onClick={submitLogin}>Login</Button>
           </Box>
         </Box>
+        <GenericSnackbar
+          open={snackBarOpen}
+          setOpen={setSnackBarOpen}
+          alertVariant={"info"}
+          snackMsg={snackMsg}
+        />
       </Container>
     </>
   );

@@ -127,6 +127,19 @@ export const CustomerForm = ({
               value={editCustomer.contact_number}
               type="tel"
             />
+            <TextField
+              onChange={(e) =>
+                setEditCustomer({
+                  ...editCustomer,
+                  notes: e.target.value,
+                })
+              }
+              placeholder="Notes"
+              value={editCustomer.notes}
+              multiline
+              rows={4}
+              type="text"
+            />
             <Box>
               <FormGroup>
                 <DateTimePicker
