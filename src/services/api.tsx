@@ -1,7 +1,7 @@
 import moment from "moment";
 import { signUpPayload } from "../types/dataTypes";
 
-const url = "https://demo-scheduler-eurik.herokuapp.com/";
+const url = "https://demo-scheduler-eurik.herokuapp.com";
 export const getAuthToken = async (userform: {
   email: string;
   password: string;
@@ -16,16 +16,13 @@ export const getAuthToken = async (userform: {
 };
 
 export const signUpNewUser = async (payload: signUpPayload) => {
-  const response = await fetch(url + "/companies", {
+  return await fetch(url + "/companies", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
   });
-  if (response.ok) {
-    return response.json();
-  }
 };
 
 export const fetchCustomers = async (token: string) => {

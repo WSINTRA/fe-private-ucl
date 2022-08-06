@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { signUpNewUser } from "../../../services/api";
 import { signUpPayload } from "../../../types/dataTypes";
+import GenericSnackbar from "../../genericSnackbar/genericSnackbar";
 
 export const SignUpForm = () => {
   const [companyName, setCompanyName] = useState("");
@@ -14,6 +15,8 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarMsg, setSnackBarMsg] = useState("");
   const submitNewUser = async () => {
     const payload: signUpPayload = {
       user: {
@@ -26,14 +29,27 @@ export const SignUpForm = () => {
         address: address,
       },
     };
-    let response = await signUpNewUser(payload);
-    console.log(response);
+    let res = await signUpNewUser(payload);
+    if (res.ok) {
+      setSnackBarMsg("Company sign up complete, you can now go back and login");
+      setSnackBarOpen(true);
+    } else {
+      const { error } = await res.json();
+      setSnackBarMsg(`The following error occurred: ${error}`);
+      setSnackBarOpen(true);
+    }
   };
   return (
     <>
       <Link to="/">
         <ArrowBack />
       </Link>
+      <GenericSnackbar
+        open={snackBarOpen}
+        setOpen={setSnackBarOpen}
+        alertVariant={"info"}
+        snackMsg={snackBarMsg}
+      />
       <Container
         sx={{ padding: "8px", border: "3px solid silver", borderRadius: "8px" }}
       >
