@@ -1,7 +1,7 @@
 import moment from "moment";
 import { signUpPayload } from "../types/dataTypes";
 
-const url = "http://127.0.0.1:3000";
+const url = "https://demo-scheduler-eurik.herokuapp.com/";
 export const getAuthToken = async (userform: {
   email: string;
   password: string;
