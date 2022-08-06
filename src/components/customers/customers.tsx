@@ -10,6 +10,7 @@ import { CustomerForm } from "./customerForm";
 import moment from "moment";
 import { deleteCustomer } from "../../services/api";
 import { AuthContext } from "../../services/authContext";
+import GenericSnackbar from "../genericSnackbar/genericSnackbar";
 
 const Customers = ({
   customers,
@@ -22,7 +23,8 @@ const Customers = ({
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
   const [updatingCell, setUpdatingCell] = useState<any>();
-
+  const [deleteSnackBar, setDeleteSnackBar] = useState(false);
+  const [deleteMsg, setDeleteMsg] = useState("");
   const EditButton: React.FC = (params: any) => {
     return (
       <Button
@@ -54,6 +56,12 @@ const Customers = ({
     const res = await deleteCustomer(token, params.row.original.id);
     if (res.ok) {
       params.deleteRow(params.row.original.id);
+      setDeleteMsg(
+        `${
+          params.row.original.first_name + " " + params.row.original.last_name
+        } deleted`
+      );
+      setDeleteSnackBar(true);
     }
   };
 
@@ -109,6 +117,12 @@ const Customers = ({
 
   return (
     <Box sx={{ margin: "auto" }}>
+      <GenericSnackbar
+        open={deleteSnackBar}
+        setOpen={setDeleteSnackBar}
+        alertVariant={"success"}
+        snackMsg={deleteMsg}
+      />
       <GenericReactTable
         title="Existing Customers"
         data={customers || []}
