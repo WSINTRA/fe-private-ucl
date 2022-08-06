@@ -84,6 +84,7 @@ import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
+import { Refresh } from "@mui/icons-material";
 
 interface GRTprops {
   data: Record<string, unknown>[];
@@ -105,9 +106,7 @@ interface GRTprops {
   initialSort?: SortingRule<Record<string, unknown>>[];
   searchTerm?: string;
   setSearchTerm?: React.Dispatch<string>;
-  fetchData?: (
-    variables?: Partial<Record<string, any>> | undefined
-  ) => Promise<any>;
+  fetchData?: any;
   children?: React.ReactNode;
   topPageination?: boolean;
   setCreateMode?: React.Dispatch<boolean>;
@@ -175,9 +174,9 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
       );
   };
 
-  const deleteRow = (columnId: any) => {
+  const deleteRow = (deleteId: any) => {
     setSkipPageReset(true);
-    const updateData = tableData.filter((item) => item.id !== columnId);
+    const updateData = tableData.filter((item) => item.id !== deleteId);
     setTableData(updateData);
   };
 
@@ -267,6 +266,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
         setTableForm(true);
       },
     },
+    { component: <Refresh />, name: "refresh", onClick: () => fetchData() },
   ];
   // After data chagnes, we turn the flag back off
   // so that if data actually changes when we're not
@@ -401,7 +401,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                   height: "60px",
                   paddingLeft: 2,
                   paddingRight: 2,
-                  display: "inline-flex",
+                  display: "flex",
                   flexDirection: "row",
                 }}
               >
@@ -413,6 +413,7 @@ const GenericReactTable: React.FC<GRTprops> = (props) => {
                     alignSelf: "center",
                     fontSize: "1.5rem",
                     fontWeight: "bold",
+                    textAlign: "left",
                   }}
                 >
                   {title}

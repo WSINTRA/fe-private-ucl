@@ -13,9 +13,14 @@ import {
   TextField,
 } from "@mui/material";
 import NextServiceDatePrompt from "./nextServiceDatePrompt";
-import { saveCustomerNote, saveNextDate } from "../../services/api";
+import {
+  saveCustomer,
+  saveCustomerNote,
+  saveNextDate,
+} from "../../services/api";
 import { AuthContext } from "../../services/authContext";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import GenericSnackbar from "../genericSnackbar/genericSnackbar";
 
 interface customerForm {
   editM: boolean;
@@ -48,9 +53,11 @@ export const CustomerForm = ({
   const [editCustomer, setEditCustomer] = useState(customer || emptyCustomer);
   const [openServiceDialog, setOpenServiceDialog] = useState(false);
   const [notes, setNotes] = useState("");
-  const [date, setDate] = useState<Date | null>(moment().toDate());
+  const [date, setDate] = useState(moment().toDate());
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackMsg, setSnackMsg] = useState("");
 
-  const handleChange = (newDate: Date | null) => {
+  const handleChange = (newDate: Date) => {
     setDate(newDate);
   };
 
@@ -61,9 +68,30 @@ export const CustomerForm = ({
       updateCell(tableCell.index, key, value);
     });
   };
-  const saveNewCustomer = () => {
+  const saveNewCustomer = async () => {
     //TODO - Perform validations
-    console.log("Save customer", editCustomer);
+    const payload = {
+      ...editCustomer,
+      first_service_date: moment(date)
+        .utc()
+        .format("dddd, MMMM Do YYYY, h:mm:ss a"),
+      next_service_date: moment(date)
+        .utc()
+        .format("dddd, MMMM Do YYYY, h:mm:ss a"),
+      active_status: true,
+    };
+
+    let res = await saveCustomer(token, payload);
+    if (res.ok) {
+      setSnackMsg("Customer created!");
+      setSnackBarOpen(true);
+      updateCell(
+        "nil",
+        "nil",
+        { ...editCustomer, next_service_date: date, first_service_date: date },
+        true
+      );
+    }
   };
   const saveDate = async (dateValue: Date, rFrequency: string) => {
     const res = await saveNextDate(
@@ -123,7 +151,7 @@ export const CustomerForm = ({
                   contact_number: e.target.value,
                 })
               }
-              placeholder="Contact"
+              placeholder="Contact Number"
               value={editCustomer.contact_number}
               type="tel"
             />
@@ -145,6 +173,7 @@ export const CustomerForm = ({
                 <DateTimePicker
                   label="First Service Date"
                   value={date}
+                  // @ts-ignore
                   onChange={handleChange}
                   renderInput={(params) => (
                     <TextField sx={{ marginTop: "2px" }} {...params} />
@@ -157,6 +186,12 @@ export const CustomerForm = ({
             </Button>
           </Stack>
         </FormControl>
+        <GenericSnackbar
+          open={snackBarOpen}
+          setOpen={setSnackBarOpen}
+          alertVariant={"info"}
+          snackMsg={snackMsg}
+        />
       </Box>
     );
   };

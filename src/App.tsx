@@ -19,6 +19,10 @@ export const App: React.FC = () => {
   const [customers, setCustomers] = React.useState<customer[]>();
   const [company, setCompany] = React.useState<company>();
 
+  const refetchCustomers = React.useCallback(async () => {
+    setCustomers(await fetchCustomers(authorized));
+  }, [authorized]);
+
   React.useEffect(() => {
     const loggedInToken = localStorage.getItem("token");
     const loggedInUser = localStorage.getItem("user");
@@ -27,11 +31,9 @@ export const App: React.FC = () => {
       setCompany(JSON.parse(loggedInUser));
     }
     if (authorized) {
-      (async () => {
-        setCustomers(await fetchCustomers(authorized));
-      })();
+      refetchCustomers();
     }
-  }, [authorized]);
+  }, [authorized, refetchCustomers]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -50,7 +52,12 @@ export const App: React.FC = () => {
                 <>
                   <Route
                     path="/"
-                    element={<Home customers={customers as customer[]} />}
+                    element={
+                      <Home
+                        refetch={refetchCustomers}
+                        customers={customers as customer[]}
+                      />
+                    }
                   />
                   <Route path="/employees" element={<Employees />} />
                 </>

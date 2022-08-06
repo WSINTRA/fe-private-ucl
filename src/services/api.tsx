@@ -87,3 +87,30 @@ export const saveCustomerNote = async (
     return response.json();
   }
 };
+
+export const saveCustomer = async (token: string, payload: any) => {
+  return await fetch(url + "/customers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      customer: {
+        ...payload,
+      },
+    }),
+  });
+};
+
+export const deleteCustomer = async (token: string, id: string) => {
+  return await fetch(url + `/customers/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

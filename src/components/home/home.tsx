@@ -8,7 +8,13 @@ import { AuthContext } from "../../services/authContext";
 import { customer } from "../../types/dataTypes";
 import Customers from "../customers/customers";
 
-const Home = ({ customers }: { customers: customer[] }) => {
+const Home = ({
+  customers,
+  refetch,
+}: {
+  customers: customer[];
+  refetch: () => void;
+}) => {
   const { setToken, setCompany } = useContext(AuthContext);
   let navigate = useNavigate();
   const logout = () => {
@@ -21,10 +27,10 @@ const Home = ({ customers }: { customers: customer[] }) => {
     <>
       <Button onClick={() => logout()}>Logout</Button>
       <Container>
-        <Typography variant="h4">
+        <Typography variant="h4" sx={{ marginBottom: "2rem" }}>
           Todays Date - {moment().format("MMMM Do YYYY")}
         </Typography>
-        <Customers customers={customers} />
+        <Customers refetch={refetch} customers={customers} />
       </Container>
     </>
   );
