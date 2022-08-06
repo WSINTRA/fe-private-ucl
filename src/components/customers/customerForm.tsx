@@ -46,7 +46,7 @@ export const CustomerForm = ({
     first_name: "",
     last_name: "",
     first_service_date: "",
-    next_service_date: null,
+    next_service_date: "",
     notes: "",
   };
 
@@ -60,7 +60,6 @@ export const CustomerForm = ({
   const handleChange = (newDate: Date) => {
     setDate(newDate);
   };
-
   const updateTableAndView = (updatedCustomer: customer) => {
     type resKeys = keyof customer;
     Object.keys(updatedCustomer).forEach((key) => {
